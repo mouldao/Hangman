@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="Hangman.css">
+
+</head>
+<h1>HANGMAN</h1>
+<button id='Start' onclick="Start()">Start</button>
+<button id='Restart' onclick="Restart()">Restart</button>
+<div id = 'letters'>
+
+
+</div>
+<div class='alphabet1'>
+    <div class='alphabet'>
+        <button id='A' class='button' onclick="Choose('A')">A</button>
+        <button id='B' class='button' onclick="Choose('B')">B</button>
+        <button id='C' class='button' onclick="Choose('C')">C</button>
+        <button id='D' class='button' onclick="Choose('D')">D</button>
+        <button id='E' class='button' onclick="Choose('E')">E</button>
+        <button id='F' class='button' onclick="Choose('F')">F</button>
+        <button id='G' class='button' onclick="Choose('G')">G</button>
+        <button id='H' class='button' onclick="Choose('H')">H</button>
+        <button id='I' class='button' onclick="Choose('I')">I</button>
+        <button id='J' class='button' onclick="Choose('J')">J</button>
+        <button id='K' class='button' onclick="Choose('K')">K</button>
+        <button id='L' class='button' onclick="Choose('L')">L</button>
+        <button id='M' class='button' onclick="Choose('M')">M</button>
+    </div>
+    <div class='alphabet'>
+        <button id='N' class='button' onclick="Choose('N')">N</button>
+        <button id='O' class='button' onclick="Choose('O')">O</button>
+        <button id='P' class='button' onclick="Choose('P')">P</button>
+        <button id='Q' class='button' onclick="Choose('Q')">Q</button>
+        <button id='R' class='button' onclick="Choose('R')">R</button>
+        <button id='S' class='button' onclick="Choose('S')">S</button>
+        <button id='T' class='button' onclick="Choose('T')">T</button>
+        <button id='U' class='button' onclick="Choose('U')">U</button>
+        <button id='V' class='button' onclick="Choose('V')">V</button>
+        <button id='W' class='button' onclick="Choose('W')">W</button>
+        <button id='X' class='button' onclick="Choose('X')">X</button>
+        <button id='Y' class='button' onclick="Choose('Y')">Y</button>
+        <button id='Z' class='button' onclick="Choose('Z')">Z</button>
+    </div>
+</div>
+<div>
+    <img id='man' src="./Images/Empty.png" /img>
+</div>
+
+<body>
+
+
+    <script>
+        // list of words to be used in the scrabble game
+        let words = ['CHRISTMAS', 'VINEYARD', 'JOCKEY', 'JUKEBOX', 'FLAPJACK']
+        let chars = ''
+        let countHangman = 0
+        let started = false
+        function Start() {
+            started = true
+            // Selecting a random word from words array to start the game
+            word = words[Math.floor(Math.random() * words.length)]
+
+            // creating textfields for each character of the word and setting it to readonly
+            for (let i = 0; i < word.length; i++) {
+                let x = document.createElement("INPUT")
+
+                document.getElementById('letters').appendChild(x);
+                document.getElementById("Start").disabled = true;
+                x.setAttribute('id', 'word' + i)
+                x.setAttribute('maxlength', 1)
+                x.setAttribute('style', 'border-bottom-color: black;width: 10px')
+                x.setAttribute('readonly', 'readonly')
+                chars = word.split("")
+
+            }
+            // Create an array with individual characters of the word
+
+        }
+
+        let marker = 0
+
+        function Choose(letter) {
+
+            if (started === true) {
+
+
+                document.getElementById(letter).disabled = true
+                document.getElementById(letter).setAttribute('style', 'background-color:red')
+                for (let i = 0; i < chars.length; i++) {
+                    if (chars[i] === letter) {
+                        document.getElementById('word' + i).value = chars[i];
+                        marker = 1
+                    }
+                }
+                if (marker === 0) {
+                    countHangman++
+                    console.log(countHangman)
+                    if (countHangman === 1) {
+                        document.getElementById('man').setAttribute('src', './Images/Pole.png')
+                    } else if (countHangman === 2) {
+                        document.getElementById('man').setAttribute('src', './Images/Beam.png')
+                    } else if (countHangman === 3) {
+                        document.getElementById('man').setAttribute('src', './Images/Head.png')
+                    } else if (countHangman === 4) {
+                        document.getElementById('man').setAttribute('src', './Images/Torso.png')
+                        console.log('torso')
+                    }  else if (countHangman === 5) {
+                        document.getElementById('man').setAttribute('src', './Images/RightLeg.png')
+                        console.log('rightleg')
+                    } else if (countHangman === 6) {
+                        document.getElementById('man').setAttribute('src', './Images/LeftLeg.png')
+                        console.log('leftleg')
+                    } else if (countHangman === 7) {
+                        document.getElementById('man').setAttribute('src', './Images/RightArm.png')
+                    } else if (countHangman === 8) {
+                        document.getElementById('man').setAttribute('src', './Images/LeftArm.png')
+                        setTimeout(function () { alert('Game Over! You have been Hung!');location.reload();}, 0.5e3)
+                    }
+
+                }
+                marker = 0
+                let index = 0
+                for (let i = 0; i < chars.length; i++) {
+                    if (document.getElementById('word' + i).value === chars[i]) {
+                        index += 1
+                    
+                    }
+                }
+                if (index === chars.length) {
+                    setTimeout(function () { alert('You suvived! You Won!'); location.reload();}, 0.5e3)
+                }
+                index = 0
+
+            }
+
+        }
+
+        Restart = () => {
+            location.reload()
+        }
+        
+
+
+    </script>
+
+</body>
+
+</html>
