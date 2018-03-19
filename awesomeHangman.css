@@ -1,0 +1,14 @@
+.letters {
+  display: flex;
+  margin: 10px 0px;
+}
+
+.letters > span {
+  width: 20px;
+  height: 20px;
+  border: 1px solid black;
+  padding: 0px 1px;
+  margin: 0px 1px;
+  text-align: center;
+  line-height: 20px;
+}

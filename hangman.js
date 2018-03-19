@@ -10,7 +10,7 @@ var setHangmanImages;
     };
 
     var gameStatus = GAME_STATUS.gameNotStarted;
-    var words = ['CHRISTMAS', 'VINEYARD', 'JOCKEY', 'JUKEBOX', 'FLAPJACK']
+    var words = [];
     var chars = ''
     var countHangman = 0
     var started = false
@@ -41,12 +41,12 @@ var setHangmanImages;
 
         return initialzer;
     })();
-    
+
     startGame = function () {
         gameStatus = GAME_STATUS.gameInProgress;
         // Selecting a random word from words array to start the game
-        word = words[Math.floor(Math.random() * words.length)]
-
+        word = wordsData[Math.floor(Math.random() * wordsData.length)].toLowerCase();
+  
         if (images.length !== 9) {
             images = [
                 './Images/Empty.png',
@@ -72,10 +72,10 @@ var setHangmanImages;
         images = imagePathsArray;
     }
 
-    function renderHiddenLetters () {
+    function renderHiddenLetters() {
         // creating textfields for each character of the word and setting it to readonly
         for (var i = 0; i < word.length; i++) {
-            var x = document.createElement("INPUT");
+            var x = document.createElement('span');
 
             /**
              * Set the styles as an attribute on the HTMLElment in stored in a variable 
@@ -86,7 +86,6 @@ var setHangmanImages;
             document.getElementById(gameOptions.startId).disabled = true;
             x.setAttribute('id', 'letter-' + i)
             x.setAttribute('maxlength', 1)
-            x.setAttribute('style', 'border-bottom-color: black;width: 10px')
             x.setAttribute('readonly', 'readonly')
             chars = word.split("")
 
@@ -98,10 +97,10 @@ var setHangmanImages;
         var keyBoardRow1 = document.createElement('div');
         var keyBoardRow2 = document.createElement('div');
 
-        for (var i = 'A'.charCodeAt(0); i < 'N'.charCodeAt(0); i++) {
+        for (var i = 'a'.charCodeAt(0); i < 'n'.charCodeAt(0); i++) {
             var letter1 = String.fromCharCode(i);
             var button1 = document.createElement('button');
-            button1.innerHTML = letter1;
+            button1.innerHTML = letter1.toUpperCase();
             button1.setAttribute('id', letter1);
             button1.onclick = function (event) {
                 var letter = event.target.getAttribute('id');
@@ -109,10 +108,10 @@ var setHangmanImages;
             }
             keyBoardRow1.appendChild(button1);
         }
-        for (var i = 'N'.charCodeAt(0); i < 'Z'.charCodeAt(0) + 1; i++) {
+        for (var i = 'n'.charCodeAt(0); i < 'z'.charCodeAt(0) + 1; i++) {
             var letter2 = String.fromCharCode(i);
             var button2 = document.createElement('button');
-            button2.innerHTML = letter2;
+            button2.innerHTML = letter2.toUpperCase();
             button2.setAttribute('id', letter2);
             button2.onclick = function (event) {
                 var letter = event.target.getAttribute('id');
@@ -129,50 +128,33 @@ var setHangmanImages;
     }
     function clickLetterHandler(letter) {
         var letterFound = 0;
-        console.log('chars', chars);
 
         if (gameStatus === GAME_STATUS.gameInProgress) {
             document.getElementById(letter).disabled = true
             document.getElementById(letter).setAttribute('style', 'background-color:red')
             for (var i = 0; i < chars.length; i++) {
-                console.log('checkIf', chars[i], letter);
                 if (chars[i] === letter) {
-                    console.log('matchFound!');
-                    document.getElementById('letter-' + i).value = chars[i];
+                    document.getElementById('letter-' + i).innerHTML = chars[i].toUpperCase();
                     letterFound = 1
                 }
             }
             if (letterFound === 0) {
                 countHangman++
-                console.log(countHangman)
-                if (countHangman === 1) {
-                    document.getElementById('man').setAttribute('src', './Images/Pole.png')
-                } else if (countHangman === 2) {
-                    document.getElementById('man').setAttribute('src', './Images/Beam.png')
-                } else if (countHangman === 3) {
-                    document.getElementById('man').setAttribute('src', './Images/Head.png')
-                } else if (countHangman === 4) {
-                    document.getElementById('man').setAttribute('src', './Images/Torso.png')
-                    console.log('torso')
-                } else if (countHangman === 5) {
-                    document.getElementById('man').setAttribute('src', './Images/RightLeg.png')
-                    console.log('rightleg')
-                } else if (countHangman === 6) {
-                    document.getElementById('man').setAttribute('src', './Images/LeftLeg.png')
-                    console.log('leftleg')
-                } else if (countHangman === 7) {
-                    document.getElementById('man').setAttribute('src', './Images/RightArm.png')
-                } else if (countHangman === 8) {
-                    document.getElementById('man').setAttribute('src', './Images/LeftArm.png')
+
+
+                document.getElementById(gameOptions.imageId).setAttribute('src', images[countHangman])
+                if (countHangman === 8) {
                     setTimeout(function () { alert('Game Over! You have been Hung!'); location.reload(); }, 0.5e3)
+                    
+                    gameStatus = GAME_STATUS.gameOver;
                 }
 
             }
             var index = 0
             for (var i = 0; i < chars.length; i++) {
-                if (document.getElementById('letter-' + i).value === chars[i]) {
+                if (document.getElementById('letter-' + i).innerHTML === chars[i].toUpperCase()) {
                     index += 1
-
+              
                 }
             }
             if (index === chars.length) {
@@ -204,7 +186,7 @@ var superHangManHtml = "<div>"
     + "<h1>HANGMAN</h1>"
     + "<button id='" + options.startId + "'  onClick='startGame()' >Start</button>"
     + "<button id='" + options.resetId + "'>Reset</button>"
-    + "<div id='" + options.lettersId + "'></div>"
+    + "<div class='letters' id='" + options.lettersId + "'></div>"
     + "<div id='" + options.keyBoardId + "'></div>"
     + "<div><img id='" + options.imageId + "'></div>"
     + "</div>";
